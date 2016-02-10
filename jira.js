@@ -10,7 +10,7 @@ var Jira = function(colunas) {
         var duracao = moment.duration(row[colunas.duracao])
         jiraWorklog["timeSpent"] = duracao.days() + 'd ' + duracao.hours() + 'h ' + duracao.minutes() + 'm';
         //TODO: unHardCode timezone and date masks
-        jiraWorklog["started"] = moment(row[colunas.data] + " " + row[colunas.inicio] + ' -02:00', "DD/MM/YYYY HH:mm Z").format('YYYY-MM-DDThh:mm:ss.sssZZ');
+        jiraWorklog["started"] = moment(row[colunas.data] + " " + row[colunas.inicio] + ' -02:00', "DD/MM/YYYY HH:mm Z").format('YYYY-MM-DDTHH:mm:ss.sssZZ');
         jiraWorklog["comment"] = row[colunas.comentario] ? row[colunas.comentario] : "";
 
         return jiraWorklog;
