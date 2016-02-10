@@ -23,36 +23,45 @@ var WorkLogger = function(planilha) {
         }
     }
 
-    this.verficarColunasObrigatorias = function(firstRow) {
+    this.verficarColunasObrigatorias = function(firstRow,sheet) {
+        var ret = true;
         if (firstRow) {
             var firstRowKeys = Object.keys(firstRow);
             var colsKeys = Object.keys(colunas);
             for (var i = 0; i < colsKeys.length; i++) {
                 if (firstRowKeys.indexOf(colunas[colsKeys[i]]) < 0) {
-                    console.log("Coluna " + colunas[colsKeys[i]] + " não encontrada na tabela")
-                    return false;
+                    console.log("Coluna " + colunas[colsKeys[i]] + " não encontrada na planilha " + sheet.title)
+                    ret = false;
                 }
             }
         }
-        return true;
+        return ret;
     }
 
     this.logarLinhas = function(err, rows) {
         if (err) {
             console.log(err);
         } else {
-            if (wl.verficarColunasObrigatorias(rows[0])) {
-                for (var i = 0; i < rows.length; i++) {
-                    jira.log(rows[i], wl.salvarSucessoAoLogar(rows[i]))
-                }
+            for (var i = 0; i < rows.length; i++) {
+                //jira.log(rows[i], wl.salvarSucessoAoLogar(rows[i]))
             }
         }
     }
 
     this.pegarlinhasNaoLogadas = function(sheet, cb) {
-        sheet.getRows({
-            query: colunas.logado + " != TRUE"
-        }, cb);
+        sheet.getRows({ //pega 1 linha para passar pela validacao de colunas
+            'max-results':1
+        }, function (err,rows) {
+            if (err) {
+                console.log(err);
+            } else {
+                if (wl.verficarColunasObrigatorias(rows[0], sheet)) {
+                    sheet.getRows({
+                        query: colunas.logado + " != TRUE"
+                    }, cb);
+                }
+            }
+        });
     }
 
     this.cbPlanilhaCarregada = function(err, sheetInfo) {
