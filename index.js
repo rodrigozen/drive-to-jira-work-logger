@@ -43,7 +43,7 @@ var WorkLogger = function(planilha) {
             console.log(err);
         } else {
             for (var i = 0; i < rows.length; i++) {
-                //jira.log(rows[i], wl.salvarSucessoAoLogar(rows[i]))
+                jira.log(rows[i], wl.salvarSucessoAoLogar(rows[i]))
             }
         }
     }
